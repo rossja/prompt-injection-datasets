@@ -18,3 +18,15 @@ The `src` identifies the type of dataset a source is:
 * `od`: Open Dataset
 * `hf`: HuggingFace Dataset
 * `web`: Web based Dataset
+
+
+## current status
+
+This is still a work in progress but:
+
+* The downloader works
+* The dedupe works
+
+There's a middle step of taking the downloaded data and putting it all into
+a single csv that's missing from the automation (I've been doing that bit
+manually for now). 
