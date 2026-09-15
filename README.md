@@ -1,7 +1,13 @@
 # Prompt Injection Datasets
 
-This repository contains lists of datasets that can be used to train
-prompt defense or attack models.
+This repository catalogs prompt injection, jailbreak, and general AI safety
+datasets for training and evaluating attack and defense models.
+
+The scope includes injection payloads and contexts, jailbreak prompts, harmful
+requests, and labeled safety examples, including benign controls. General safety
+datasets can supply the behaviors an attack attempts to elicit, such as CBRNE
+content or hate speech. These are useful attack targets even when the examples
+do not themselves contain a prompt injection or jailbreak.
 
 It also contains some scripts to facilitate acquiring the datasets and
 cleaning them up for use.
@@ -34,6 +40,23 @@ Run the source-format regression tests without downloading datasets:
 ```sh
 uv run --no-project --with pandas python -m unittest discover -s tests -v
 ```
+
+## Source selection
+
+The [2026-09-15 research review](docs/dataset-research-2026-09-15.md) records
+new sources, their roles, publisher evidence, known overlap, and excluded
+mirrors. The catalog includes attack payloads, harmful-request seeds,
+contextual benchmarks, safety labels, and benign controls.
+
+The `license` field records declared data terms where established; a blank
+means unspecified or unresolved. Some sources have mixed or custom terms,
+noncommercial restrictions, evaluation-only intended use, or gated access.
+See the review and publisher terms before acquiring or using a dataset.
+
+Source selection avoids known mirrors, but individual examples across datasets
+have not been deduplicated. Preserve source IDs, context and train/test splits
+when extracting examples. Downloading a GitHub repository does not itself
+extract its dataset from the surrounding code and benchmark files.
 
 ## current status
 
