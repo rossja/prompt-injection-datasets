@@ -1,3 +1,8 @@
+from pathlib import Path
+import re
+import subprocess
+
+
 # function to get the name of a file from a url
 def get_filename(url):
     from os import path
@@ -39,6 +44,30 @@ def download_hfdataset(hfurl, repo_type="dataset"):
     except Exception as e:
         return(e)
 
+def download_ghdataset(url):
+    """Clone a GitHub repository's default branch into datasets/github."""
+    match = re.fullmatch(
+        r"https://github\.com/([A-Za-z0-9-]+)/([A-Za-z0-9_.-]+)/?", url
+    )
+    if not match:
+        return ValueError("Expected a GitHub repository URL")
+    owner, repo = match.groups()
+    if repo.endswith(".git"):
+        repo = repo[:-4]
+    if repo in ("", ".", ".."):
+        return ValueError("Expected a GitHub repository name")
+    local_dir = Path("datasets") / "github" / owner / repo
+    try:
+        local_dir.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            ["git", "clone", "--depth", "1", "--", url, str(local_dir)],
+            check=True,
+        )
+        return "Dataset downloaded successfully"
+    except (OSError, subprocess.CalledProcessError) as error:
+        return error
+
+
 # function to download a dataset from the internet using requests
 def download_webdataset(url, filename=""):
     # set filename to the name of the file in the url if not provided
@@ -64,10 +93,12 @@ def download_datasets(list_csv_file):
     import pandas as pd
     df = pd.read_csv(list_csv_file)
     for index, row in df.iterrows():
-        if row['src'] == 'od':
+        if row["src"] == "kg":
             print(download_opendataset(row['url']))
         elif row['src'] == 'hf':
             print(download_hfdataset(row['url']))
+        elif row["src"] == "gh":
+            print(download_ghdataset(row["url"]))
         elif row['src'] == 'web':
             print(download_webdataset(row['url']))
         else:
